@@ -1,0 +1,16 @@
+#nginx
+nginx:
+  root_path: /var/www/html/prod/project_send
+  server_name: example_prod.com www.example_prod.com
+  gzip: true
+#maria db
+mariadb_root_password: "{{ vault_mariadb_root_password }}"
+mysql_user: "{{ vault_mysql_user }}"
+mysql_password: "{{ vault_mysql_password }}"
+database_name: db_prod
+# php
+max_execution_time: 90
+memory_limit: 256M
+#project_send
+debug: false
+MAX_FILESIZE: 4096

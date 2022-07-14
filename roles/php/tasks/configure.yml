@@ -1,0 +1,6 @@
+---
+- name: configure php
+  template:
+    src: php.ini.j2
+    dest: /etc/php/7.4/cli/php.ini
+  notify: restart php

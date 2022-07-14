@@ -1,0 +1,15 @@
+---
+- name: make sure php is installed
+  apt: 
+    name: "{{ php_version }}" 
+    state: present
+
+- name: install php extra modules
+  apt:
+    name: "{{php_extra_modules}}"
+    state: present
+
+- name: make sure php unit is running
+  systemd:
+    state: started
+    name: "{{ php_version }}" 

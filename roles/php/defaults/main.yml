@@ -1,0 +1,11 @@
+---
+php_version: php7.4-fpm
+php_extra_modules:
+  - php7.4-mysql 
+  - php7.4-mbstring 
+  - php7.4-gd 
+  - php7.4-xml 
+  - php7.4-gmp 
+  - php7.4-zip
+max_execution_time: 120
+memory_limit: 512M

@@ -1,0 +1,25 @@
+---
+- hosts: server:&{{env}}
+  become: yes
+  pre_tasks:
+    - name: Run the equivalent of "apt-get update" as a separate step
+      apt:
+        upgrade: yes
+        update_cache: yes
+
+    - name: Install basic project compnements
+      apt: 
+        name: "{{ item }}" 
+        state: present
+      with_items:
+        - zip
+        - unzip
+        - git
+        - npm
+        - nodejs
+        - python3-pymysql
+        - composer
+  roles:
+    - nginx
+    - mariadb
+    - php

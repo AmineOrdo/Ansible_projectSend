@@ -1,0 +1,43 @@
+---
+- hosts: app:&{{env}}
+  become: yes
+  vars:
+    ansistrano_deploy_to: "{{ nginx.root_path }}"
+    ansistrano_deploy_via: git
+    ansistrano_git_repo: "https://github.com/yvalentin/projectsend.git"
+    ansistrano_keep_releases: 3
+    ansistrano_shared_paths:
+      - upload
+  roles:
+    - ansistrano.deploy
+  tasks:
+    - name: Set the permission and ownership
+      file:
+        path: "{{ nginx.root_path }}"
+        owner: "{{ansible_user_id}}"
+        group: "{{ansible_user_id}}"
+        mode: '755'
+
+    - name: Download and installs all libs and dependencies outlined in the /path/to/project/composer.lock
+      composer:
+        command: install
+        working_dir: "{{ nginx.root_path }}/current/"
+    
+    - name: link database and user to projectsend
+      template:
+        src: ./templates/sys.config.php.j2
+        dest: "{{ nginx.root_path }}/current/includes/sys.config.php"
+        owner: root
+        group: root
+        mode: '644'
+    
+    - name: npm install on app
+      npm:
+       path: "{{ nginx.root_path }}/current/"
+       state: present
+       unsafe_perm: true
+
+    - name: run gulp
+      command: chdir="{{ nginx.root_path }}/current" ./node_modules/gulp/bin/gulp.js build
+
+      

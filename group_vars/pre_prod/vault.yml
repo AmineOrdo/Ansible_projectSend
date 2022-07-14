@@ -1,0 +1,3 @@
+vault_mariadb_root_password: root
+vault_mysql_user: pre_prod
+vault_mysql_password: pre_prod

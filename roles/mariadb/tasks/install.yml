@@ -1,0 +1,28 @@
+---
+- name: Run the equivalent of "apt-get update" as a separate step
+  apt:
+    update_cache: yes
+
+- name: Install mariadb
+  apt: 
+    name: mariadb-server
+    state: latest
+  notify: restart mariadb
+
+- name: Make sure mariadb unit is running
+  systemd:
+    state: started
+    name: mariadb
+
+- name: Ensure mariadb root password is updated for all root accounts
+  mysql_user:
+    name: root
+    host: localhost
+    login_unix_socket: /var/run/mysqld/mysqld.sock
+    password: "{{ mariadb_root_password }}"
+    priv: '*.*:ALL,GRANT'
+    check_implicit_admin: true
+  
+- template:
+    src: ./templates/my.cnf.j2 # Fichier de template dans ce repo 
+    dest: /root/.my.cnf 
